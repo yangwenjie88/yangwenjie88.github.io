@@ -6,9 +6,10 @@
     <content><![CDATA[<p>消费者心跳是consumer client 端定时向kafka服务端发起心跳，用于检测消费者状态是否正常的机制。一旦在一个心跳过期周期内(默认10s)，Broker端的消费组组协调器(GroupCoordinator)会把消费者从消费组中移除，从而触发重平衡</p>
 <span id="more"></span>
 
+
 <h5 id="客户端源码"><a href="#客户端源码" class="headerlink" title="客户端源码"></a>客户端源码</h5><p>主要的三个参数</p>
 <p>    heartbeat.interval.ms 心跳间隔，多长时间发起一次心跳，默认值3s</p>
-<p>    session.timeout.ms  一个周期内至少要有一次心跳，默认值10s</p>
+<p>    session.timeout.ms  一个session周期内至少要有一次心跳，默认值10s</p>
 <p>     max.poll.interval.ms poll的最大间隔，默认值300s</p>
 <p>客户端的心跳是由HeartbeatThread 类完成的，HeartbeatThread 是 AbstractCoordinator 的一个内部类，继承了KafkaThread, 本质是一个线程类。HeartbeatThread的创建是在第一次poll的时候，updateAssignmentMetadataIfNeeded 元数据更新里面。消费者需要找到对应的协调者才能发送心跳线程，创建函数的调用方是AbstractCoordinator类中的ensureActiveGroup函数。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="title function_">ensureActiveGroup</span><span class="params">(<span class="keyword">final</span> Timer timer)</span> &#123;</span><br><span class="line">        <span class="comment">// always ensure that the coordinator is ready because we may have been disconnected</span></span><br><span class="line">        <span class="comment">// when sending heartbeats and does not necessarily require us to rejoin the group.</span></span><br><span class="line">        <span class="keyword">if</span> (!ensureCoordinatorReady(timer)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        startHeartbeatThreadIfNeeded();</span><br><span class="line">        <span class="keyword">return</span> joinGroupIfNeeded(timer);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
