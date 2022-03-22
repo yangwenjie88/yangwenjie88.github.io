@@ -217,7 +217,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-03-22 22:48:17" itemprop="dateModified" datetime="2022-03-22T22:48:17+08:00">2022-03-22</time>
+      <time title="修改时间：2022-03-22 22:53:26" itemprop="dateModified" datetime="2022-03-22T22:53:26+08:00">2022-03-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -254,11 +254,6 @@
     
     <div class="post-body" itemprop="articleBody">
           <h4 id="Kafka源码分析-Consumer系列之Heartbeat"><a href="#Kafka源码分析-Consumer系列之Heartbeat" class="headerlink" title="Kafka源码分析 Consumer系列之Heartbeat"></a>Kafka源码分析 Consumer系列之Heartbeat</h4><p>消费者心跳是consumer client 端定时向kafka服务端发起心跳，用于检测消费者状态是否正常的机制。一旦在一个心跳过期周期内(默认10s)，Broker端的消费组组协调器(GroupCoordinator)会把消费者从消费组中移除，从而触发重平衡</p>
-<h5 id="客户端源码"><a href="#客户端源码" class="headerlink" title="客户端源码"></a>客户端源码</h5><p>主要的三个参数</p>
-<p>    heartbeat.interval.ms 心跳间隔，多长时间发起一次心跳，默认值3s</p>
-<p>    session.timeout.ms  一个周期内至少要有一次心跳，默认值10s</p>
-<p>     max.poll.interval.ms poll的最大间隔，默认值300s</p>
-<p>客户端的心跳是由HeartbeatThread 类完成的，HeartbeatThread 是 AbstractCoordinator 的一个内部类，继承了KafkaThread, 本质是一个线程类。HeartbeatThread的创建是在第一次poll的时候，updateAssignmentMetadataIfNeeded 元数据更新里面。消费者需要找到对应的协调者才能发送心跳线程，创建函数的调用方是AbstractCoordinator类中的ensureActiveGroup函数。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2022/03/02/Kafka%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90Consumer%E4%B9%8BHeartbeat/#more" rel="contents">
